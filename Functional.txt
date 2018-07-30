@@ -1,0 +1,145 @@
+package businesscomponents;
+
+
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.Select;
+
+import com.cognizant.framework.Status;
+
+import supportlibraries.ReusableLibrary;
+import supportlibraries.ScriptHelper;
+
+
+/**
+ * Functional Components class
+ * @author Cognizant
+ */
+public class FunctionalComponents extends ReusableLibrary
+{
+	/**
+	 * Constructor to initialize the component library
+	 * @param scriptHelper The {@link ScriptHelper} object passed from the {@link DriverScript}
+	 */
+	public FunctionalComponents(ScriptHelper scriptHelper)
+	{
+		super(scriptHelper);
+	}
+	
+	public void invokeApplication()
+	{
+		driver.get(properties.getProperty("ApplicationUrl"));
+		report.updateTestLog("Invoke Application", "Invoke the application under test @ " +
+								properties.getProperty("ApplicationUrl"), Status.DONE);
+	}
+public void citiesData() throws InterruptedException{
+		
+		driver.findElement(By.xpath("//*[@id=\"approot\"]")).click();
+		
+		String fromCity = dataTable.getData("Travel", "FromCity");
+		String toCity = dataTable.getData("Travel", "ToCity");
+		String finalCity = dataTable.getData("Travel", "FinalCity");
+		
+		driver.findElement(By.xpath("//input[contains(@id, 'fromCityList')]")).sendKeys(fromCity); 
+		
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//input[contains(@id, 'fromCityList')]")).sendKeys(Keys.ENTER);
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Start typing city - e.g. Mysore')]")).sendKeys(toCity);
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Start typing city - e.g. Mysore')]")).sendKeys(Keys.ENTER);	
+		
+		driver.findElement(By.xpath("//div[contains(@class, 'bg-addCity')]")).click();
+		Thread.sleep(1000);	
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[3]/div[2]/input")).sendKeys(finalCity);
+		Thread.sleep(1000);
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[3]/div[2]/input")).sendKeys(Keys.ARROW_DOWN, Keys.ENTER);		
+	
+		report.updateTestLog("citiesData", "Cities data is passed successfully " , Status.PASS);
+	} 
+
+public void datesPicker() throws InterruptedException{
+		
+		//Departure DAte
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[4]/div[1]/div/p-calendar[1]/span/input")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[4]/div[1]/div/p-calendar[1]/span/div/div/a[2]")).click();
+		Thread.sleep(3000); 
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[4]/div[1]/div/p-calendar[1]/span/div/table/tbody/tr[2]/td[4]/a")).click();
+		
+		// Return Date
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[4]/div[3]/div/p-calendar[1]/span/input")).click();
+		Thread.sleep(3000);
+		driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-home/div[1]/div[2]/div[2]/app-outstation/div/form/div[4]/div[3]/div/p-calendar[1]/span/div/table/tbody/tr[3]/td[3]/a")).click();
+		
+		Thread.sleep(3000);
+		Select times = new Select(driver.findElement(By.xpath("//select[contains(@id,\"pickUpTime\")]")));
+		times.selectByIndex(3);
+		Thread.sleep(3000);
+		
+		report.updateTestLog("datesPicker", "Date is passed successfully " , Status.SCREENSHOT);
+		
+		driver.findElement(By.xpath("//button[contains(@class, 'book-button btn')]")).click();
+		
+		
+	} 
+
+	public void carSelection() throws InterruptedException{
+		
+	driver.navigate().forward();
+	Thread.sleep(3000);
+	
+	report.updateTestLog("carSelection", "Car is selected successfully " , Status.SCREENSHOT);
+	
+	driver.findElement(By.xpath("//*[@id=\"approot\"]/mat-sidenav-container/mat-sidenav-content/app-select-car/div[2]/div/div/div[3]/div[5]/div/button")).click();
+	
+	
+	} 
+
+public void customerDetails() throws InterruptedException{
+		
+		Thread.sleep(2000);	
+		
+		String userName = dataTable.getData("User", "FirstName");
+		String userEmail = dataTable.getData("User", "Email");
+			
+		String userPhone = dataTable.getData("User", "Phone");
+		String userLocation = dataTable.getData("User", "Location");
+		
+		String userAddress = dataTable.getData("User", "Address");
+		String userLandMark = dataTable.getData("User", "Landmark");
+		
+		// String userAlternateEmail = dataTable.getData("RegisterUser_Data", "AlternateEmail");
+		
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Name *')]")).sendKeys(userName);  
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Email address *')]")).sendKeys(userEmail);
+
+		
+		Select mobileNo = new Select(driver.findElement(By.xpath("//select[contains(@id, 'idISD')]")));
+		mobileNo.selectByIndex(0);
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Mobile Number *')]")).sendKeys(userPhone);
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Pickup Locality *')]")).sendKeys(userLocation);
+		
+		Thread.sleep(1000); 
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Pickup Locality *')]")).sendKeys(Keys.ARROW_DOWN,Keys.ENTER);
+		
+		Thread.sleep(1000);
+		
+		driver.findElement(By.xpath("//textarea[contains(@placeholder, 'Address *')]")).sendKeys(userAddress);
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Landmark/Door Number/Building Name')]")).sendKeys(userLandMark);
+			
+/*		Thread.sleep(3000);
+		driver.findElement(By.xpath("//div[contains(.,' Send trip details to alternate email')]//button")).click();;
+									
+		Thread.sleep(3000)
+		
+		driver.findElement(By.xpath("//input[contains(@placeholder, 'Alternate Email')]")).sendKeys(userAlternateEmail);*/
+				
+		report.updateTestLog("customerDetails", "customerDetails is sent successfully " , Status.SCREENSHOT);
+	}  
+}
